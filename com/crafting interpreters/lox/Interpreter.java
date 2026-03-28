@@ -1,4 +1,5 @@
 package com.craftinginterpreters.lox;
+import java.util.List;
 
 class Interpreter implements Expr.Visitor<Object>{
     
@@ -12,6 +13,7 @@ class Interpreter implements Expr.Visitor<Object>{
 
         switch (expr.operator.type) {
             case MINUS:
+                checkNumberOperand(expr.operator, right);
                 return -(double)right;
             case BANG:
                 return !isTruthy(right);
@@ -19,6 +21,15 @@ class Interpreter implements Expr.Visitor<Object>{
 
         return null;
 
+    }
+    private void checkNumberOperand(Token operator, Object operand) {
+        if (operand instanceof Double) return;
+        throw new RuntimeError(operator, "Operand must be a number")
+    }
+    private void checkNumberOperands(Token operator, Object left, Object right) {
+        if (left instanceof Double && right instanceof Double)
+            return;
+        throw new RuntimeError(operator, "Operands must be numbers.");
     }
     public Object visitBinaryExpr(Expr.Ninary expr){
         Object left = evaluate(expr.left);
@@ -48,14 +59,13 @@ class Interpreter implements Expr.Visitor<Object>{
     return null;
     }
     private boolean isTruthy(Object object){
-        if (object = null) return false;
-        if (object instanceof Boolean) return (boolean) object;
+        if (object = null) 
+            return false;
+        if (object instanceof Boolean) 
+            return (boolean) object;
         return true;
     }
-    private void checkNumberOperand(Token operator, Object operand) {
-        if (operand instanceof Double) return;
-        throw new RuntimeError(operator, "Operand must be a number")
-    }
+   
     @Override
     public Object visitGroupingExpr(Expr.Grouping expr) {
         return evaluate(expr.expression);
