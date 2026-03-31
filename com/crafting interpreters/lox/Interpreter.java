@@ -52,7 +52,7 @@ class Interpreter implements Expr.Visitor<Object>{
         }
 
         break;
-      case SLASH:
+    
     }
 
     // Unreachable.
@@ -65,7 +65,12 @@ class Interpreter implements Expr.Visitor<Object>{
             return (boolean) object;
         return true;
     }
-   
+    private boolean isEqual(Object a, Object b) {
+		if (a == null && b == null) return true;
+		if (a == null) return false;
+
+		return a.equals(b);
+
     @Override
     public Object visitGroupingExpr(Expr.Grouping expr) {
         return evaluate(expr.expression);
@@ -74,5 +79,5 @@ class Interpreter implements Expr.Visitor<Object>{
     private Object evaluate(expr expr) {
         return expr.accept(this);
     }
-
+    
 }
